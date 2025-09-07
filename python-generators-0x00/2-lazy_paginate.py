@@ -16,7 +16,7 @@ def paginate_users(page_size, offset):
     return rows
 
 
-def lazy_pagination(page_size):
+def lazy_paginate(page_size):
     """
     Generator that lazily paginates through user_data.
     Only fetches the next page when needed.

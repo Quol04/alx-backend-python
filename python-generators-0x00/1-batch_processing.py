@@ -10,8 +10,8 @@ def stream_users_in_batches(batch_size):
     """
     connection = mysql.connector.connect(
         host="localhost",
-        user="root",       # change if needed
-        password="",       # fill in if needed
+        user="root",       # adjust if needed
+        password="",       # adjust if needed
         database="ALX_prodev"
     )
     cursor = connection.cursor(dictionary=True)
@@ -33,9 +33,9 @@ def stream_users_in_batches(batch_size):
 def batch_processing(batch_size):
     """
     Process users in batches and filter those over age 25.
-    Yields each qualifying user one by one.
+    Returns a generator that yields users (dicts).
     """
     for batch in stream_users_in_batches(batch_size):  # Loop #2
         for user in batch:  # Loop #3
             if user["age"] > 25:
-                print(user)
+                yield user   # ✅ return control to caller with generator
