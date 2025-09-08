@@ -1,6 +1,6 @@
-# Python Generators Project
+# Python Project
 
-This project demonstrates the use of Python generators for efficient data processing, streaming, and pagination. It contains several scripts that showcase different generator-based techniques for handling large datasets in a memory-efficient way.
+This project demonstrates the use of Python generators and decorators for efficient data processing, streaming, and pagination. It contains several scripts that showcase different generator-based techniques for handling large datasets in a memory-efficient way.
 
 ## Table of Contents
 
@@ -41,8 +41,7 @@ This repository contains two main Python subprojects, each demonstrating advance
 - [Subprojects](#subprojects)
 - [Directory Structure](#directory-structure)
 - [Setup & Requirements](#setup--requirements)
-- [Usage](#usage)
-- [License](#license)
+
 
 ---
 
@@ -134,10 +133,5 @@ alx-backend-python/
    python python-generators-0x00/4-stream_ages.py
    ```
 
-### For Decorators Project
-
-Run any of the scripts in `python-decorators-0x01/` to see the effect of the decorators. Each script is self-contained and demonstrates a specific decorator's use.
-
----
 
 
