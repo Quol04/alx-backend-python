@@ -7,7 +7,7 @@ import asyncio
 import aiosqlite
 
 
-async def async_fetch_users(db_name="example.db"):
+async def async_fetch_users(db_name: str = "example.db"):
     """Fetch all users from the users table asynchronously."""
     async with aiosqlite.connect(db_name) as db:
         async with db.execute("SELECT * FROM users") as cursor:
@@ -15,7 +15,7 @@ async def async_fetch_users(db_name="example.db"):
             return rows
 
 
-async def async_fetch_older_users(db_name="example.db"):
+async def async_fetch_older_users(db_name: str = "example.db"):
     """Fetch users older than 40 from the users table asynchronously."""
     async with aiosqlite.connect(db_name) as db:
         async with db.execute("SELECT * FROM users WHERE age > ?", (40,)) as cursor:
