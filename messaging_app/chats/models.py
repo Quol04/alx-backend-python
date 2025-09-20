@@ -17,6 +17,7 @@ class User(AbstractUser):
     """
     user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True, db_index=True)
     email = models.EmailField(unique=True, null=False, blank=False)
+    password = models.CharField(max_length=128, null=False, blank=False)
     phone_number = models.CharField(max_length=20, null=True, blank=True)
 
     ROLE_CHOICES = (
