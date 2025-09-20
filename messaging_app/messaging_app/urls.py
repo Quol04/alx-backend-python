@@ -28,4 +28,6 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('api/', include('messaging_app.chats.urls')),  
     path('api/', include('chats.urls')),
+    # path('api/', include('chats.urls')),          # include chats routes
+    path('api-auth/', include('rest_framework.urls')), 
 ]
