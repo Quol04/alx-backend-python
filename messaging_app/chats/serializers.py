@@ -6,10 +6,30 @@ from .models import User, Conversation, Message
 # User Serializer
 # ------------------------
 class UserSerializer(serializers.ModelSerializer):
+    # Explicit password field (write-only)
+    password = serializers.CharField(write_only=True, min_length=8)
+
     class Meta:
         model = User
-        # Exclude password field for security reasons
-        exclude = ['password', 'groups', 'user_permissions']
+        exclude = ['groups', 'user_permissions']
+
+    def validate_password(self, value):
+        """
+        Custom validation for password length & strength.
+        """
+        if len(value) < 8:
+            raise serializers.ValidationError("Password must be at least 8 characters long.")
+        return value
+
+    def create(self, validated_data):
+        """
+        Override create to properly hash the password.
+        """
+        password = validated_data.pop("password")
+        user = User(**validated_data)
+        user.set_password(password)  # hashes the password
+        user.save()
+        return user
 
 
 # ------------------------
@@ -37,12 +57,22 @@ class ConversationSerializer(serializers.ModelSerializer):
     participants = UserSerializer(many=True, read_only=True)
     messages = MessageSerializer(many=True, read_only=True)
 
+    # Extra field showing number of messages
+    message_count = serializers.SerializerMethodField()
+
     class Meta:
         model = Conversation
         fields = [
             'conversation_id',
             'participants',
             'messages',
+            'message_count',
             'created_at',
         ]
         read_only_fields = ['conversation_id', 'created_at']
+
+    def get_message_count(self, obj):
+        """
+        Count number of messages in this conversation.
+        """
+        return obj.messages.count()
