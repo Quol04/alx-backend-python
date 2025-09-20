@@ -96,6 +96,8 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+# Custom User Model
+AUTH_USER_MODEL = 'chats.User'
 
 
 # Password validation
