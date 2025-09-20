@@ -1,4 +1,4 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
@@ -17,6 +17,11 @@ class ConversationViewSet(viewsets.ModelViewSet):
     serializer_class = ConversationSerializer
     permission_classes = [IsAuthenticated]
 
+    # Enable filtering & searching
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['participants__email']
+    ordering_fields = ['created_at']
+
     def get_queryset(self):
         """
         Limit conversations to only those where the user is a participant.
@@ -34,11 +39,10 @@ class ConversationViewSet(viewsets.ModelViewSet):
             return Response({"error": "At least one participant is required."},
                             status=status.HTTP_400_BAD_REQUEST)
 
-        # Create conversation
         conversation = Conversation.objects.create()
         participants = User.objects.filter(user_id__in=participant_ids)
         conversation.participants.set(participants)
-        conversation.participants.add(request.user)  # ensure creator is added
+        conversation.participants.add(request.user)  # ensure creator is included
 
         serializer = self.get_serializer(conversation)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -54,6 +58,11 @@ class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
     permission_classes = [IsAuthenticated]
+
+    # Enable filtering & searching
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['message_body', 'sender__email']
+    ordering_fields = ['sent_at']
 
     def get_queryset(self):
         """
@@ -84,7 +93,6 @@ class MessageViewSet(viewsets.ModelViewSet):
             return Response({"error": "You are not a participant in this conversation."},
                             status=status.HTTP_403_FORBIDDEN)
 
-        # Create the message
         message = Message.objects.create(
             sender=request.user,
             conversation=conversation,
