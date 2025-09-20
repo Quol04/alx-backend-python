@@ -42,9 +42,19 @@ INSTALLED_APPS = [
     
 ]
 REST_FRAMEWORK = {
+     # Require authentication by default
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
+        'rest_framework.permissions.IsAuthenticated',
     ],
+
+     # Enable session authentication
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.AllowAny',
+    # ],
 }
 
 MIDDLEWARE = [
