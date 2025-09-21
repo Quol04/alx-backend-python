@@ -31,8 +31,10 @@
 
 # # task5
 #     def test_public_repos_url(self):
-#         """Test that _public_repos_url returns the expected URL from org payload"""
-#         test_payload = {"repos_url": "https://api.github.com/orgs/test-org/repos"}
+#         """Test _public_repos_url returns expected URL from org payload"""
+#         test_payload = {
+#             "repos_url": "https://api.github.com/orgs/test-org/repos"
+#         }
 
 #         with patch.object(
 #             GithubOrgClient,
@@ -63,7 +65,9 @@
 #             "_public_repos_url",
 #             new_callable=PropertyMock,
 #         ) as mock_repos_url:
-#             mock_repos_url.return_value = "https://api.github.com/orgs/test-org/repos"
+#             mock_repos_url.return_value = (
+#                 "https://api.github.com/orgs/test-org/repos"
+#             )
 
 #             client = GithubOrgClient("test-org")
 #             result = client.public_repos()
@@ -228,10 +232,13 @@ class TestGithubOrgClient(unittest.TestCase):
     {
         "org_payload": TEST_PAYLOAD[0][0],
         "repos_payload": TEST_PAYLOAD[0][1],
-        "expected_repos": [repo["name"] for repo in TEST_PAYLOAD[0][1]],
+        "expected_repos": [
+            repo["name"] for repo in TEST_PAYLOAD[0][1]
+        ],
         "apache2_repos": [
             repo["name"] for repo in TEST_PAYLOAD[0][1]
-            if repo.get("license") and repo["license"].get("key") == "apache-2.0"
+            if (repo.get("license") and 
+                repo["license"].get("key") == "apache-2.0")
         ],
     }
 ])
