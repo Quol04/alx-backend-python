@@ -294,7 +294,7 @@ class MockResponse:
 
     def __init__(self, payload):
         """Initialize MockResponse with a payload.
-        
+
         Args:
             payload: The payload to return when json() is called.
         """
@@ -302,7 +302,7 @@ class MockResponse:
 
     def json(self):
         """Return the JSON payload from the mock response.
-        
+
         Returns:
             The payload that was provided during initialization.
         """
