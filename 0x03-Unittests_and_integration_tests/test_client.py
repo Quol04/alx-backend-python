@@ -145,7 +145,14 @@
 
 # -------------------------------------
 
-#!/usr/bin/env python3
+"""
+Unit and integration tests for GithubOrgClient.
+
+This module contains comprehensive tests for the GithubOrgClient class,
+including unit tests for individual methods and integration tests that
+verify the complete workflow using real fixture data.
+"""
+
 import unittest
 from unittest.mock import patch, PropertyMock
 from parameterized import parameterized, parameterized_class
@@ -237,7 +244,7 @@ class TestGithubOrgClient(unittest.TestCase):
         ],
         "apache2_repos": [
             repo["name"] for repo in TEST_PAYLOAD[0][1]
-            if (repo.get("license") and 
+            if (repo.get("license") and
                 repo["license"].get("key") == "apache-2.0")
         ],
     }
