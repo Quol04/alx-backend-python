@@ -147,7 +147,7 @@ from unittest.mock import patch, PropertyMock
 from parameterized import parameterized, parameterized_class
 
 from client import GithubOrgClient
-from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
+from fixtures import TEST_PAYLOAD
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -226,10 +226,13 @@ class TestGithubOrgClient(unittest.TestCase):
 # -------------------------------
 @parameterized_class([
     {
-        "org_payload": org_payload,
-        "repos_payload": repos_payload,
-        "expected_repos": expected_repos,
-        "apache2_repos": apache2_repos,
+        "org_payload": TEST_PAYLOAD[0][0],
+        "repos_payload": TEST_PAYLOAD[0][1],
+        "expected_repos": [repo["name"] for repo in TEST_PAYLOAD[0][1]],
+        "apache2_repos": [
+            repo["name"] for repo in TEST_PAYLOAD[0][1]
+            if repo.get("license") and repo["license"].get("key") == "apache-2.0"
+        ],
     }
 ])
 class TestIntegrationGithubOrgClient(unittest.TestCase):
