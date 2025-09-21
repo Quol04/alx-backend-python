@@ -156,6 +156,7 @@ verify the complete workflow using real fixture data.
 import unittest
 from unittest.mock import patch, PropertyMock
 from parameterized import parameterized, parameterized_class
+import requests
 
 from client import GithubOrgClient
 from fixtures import TEST_PAYLOAD
@@ -256,7 +257,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     def setUpClass(cls):
         """Start patcher for requests.get"""
         cls.get_patcher = patch("requests.get")
-        mock_get = cls.get_patcher.start()
+        cls.mock_get = cls.get_patcher.start()
 
         # Configure side_effect for different URLs
         def side_effect(url):
@@ -266,7 +267,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
                 return MockResponse(cls.repos_payload)
             return MockResponse({})
 
-        mock_get.side_effect = side_effect
+        cls.mock_get.side_effect = side_effect
 
     @classmethod
     def tearDownClass(cls):
@@ -292,7 +293,17 @@ class MockResponse:
     """Mock response object for requests.get"""
 
     def __init__(self, payload):
+        """Initialize MockResponse with a payload.
+        
+        Args:
+            payload: The payload to return when json() is called.
+        """
         self._payload = payload
 
     def json(self):
+        """Return the JSON payload from the mock response.
+        
+        Returns:
+            The payload that was provided during initialization.
+        """
         return self._payload
