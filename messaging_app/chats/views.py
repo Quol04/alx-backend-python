@@ -2,9 +2,20 @@ from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
+# from chats.pagination import MessagePagination
+
 from .models import Conversation, Message, User
 from .serializers import ConversationSerializer, MessageSerializer
 from .permissions import IsParticipantOfConversation, IsOwnerOrParticipant
+
+# --------------
+from rest_framework import viewsets
+from django_filters.rest_framework import DjangoFilterBackend
+from .models import Message
+from .serializers import MessageSerializer
+from .permissions import IsParticipantOfConversation
+from .pagination import MessagePagination
+from .filters import MessageFilter
 
 
 # ------------------------
@@ -104,3 +115,18 @@ class MessageViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(message)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+# ------------------------
+class MessageViewSet(viewsets.ModelViewSet):
+    queryset = Message.objects.all()
+    serializer_class = MessageSerializer
+    permission_classes = [IsParticipantOfConversation]
+    pagination_class = MessagePagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = MessageFilter
+
+    def get_queryset(self):
+        user = self.request.user
+        # Only messages in conversations the user participates in
+        return Message.objects.filter(conversation__participants=user).order_by('-created_at')

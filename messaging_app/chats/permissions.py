@@ -46,8 +46,16 @@ class IsParticipantOfConversation(BasePermission):
             # If it's neither a Conversation nor Message, deny access
             return False
         
-        # Check if the user is a participant in the conversation
-        return conversation.participants.filter(user_id=request.user.user_id).exists()
+        # Check if the user is a participant
+        is_participant = conversation.participants.filter(user_id=request.user.user_id).exists()
+        
+        # SAFE METHODS: GET, HEAD, OPTIONS → only participants can view
+        if request.method in permissions.SAFE_METHODS:
+            return is_participant
+        
+        # WRITE METHODS: POST, PUT, PATCH, DELETE → only participants can modify
+        if request.method in ["POST", "PUT", "PATCH", "DELETE"]:
+            return is_participant
 
 
 class IsOwnerOrParticipant(BasePermission):
