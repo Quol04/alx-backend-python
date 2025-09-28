@@ -82,6 +82,8 @@ MIDDLEWARE = [
     "chats.middleware.RestrictAccessByTimeMiddleware",
      # Rate limiting middleware
     "chats.middleware.OffensiveLanguageMiddleware",
+     # Role-based permission middleware
+    "chats.middleware.RolePermissionMiddleware",
 ]
 
 ROOT_URLCONF = 'messaging_app.urls'

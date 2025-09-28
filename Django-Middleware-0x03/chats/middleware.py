@@ -5,6 +5,7 @@ from django.http import HttpResponseForbidden
 import time
 from collections import defaultdict, deque
 
+
 # Configure logger for writing into requests.log
 logger = logging.getLogger(__name__)
 file_handler = logging.FileHandler("requests.log")
@@ -99,3 +100,33 @@ class OffensiveLanguageMiddleware:
         else:
             ip = request.META.get("REMOTE_ADDR")
         return ip
+
+
+# =----------=====================================
+
+
+
+class RolePermissionMiddleware:
+    def __init__(self, get_response):
+        """Called once at server startup"""
+        self.get_response = get_response
+
+    def __call__(self, request):
+        """
+        Called for each request.
+        Deny access if user is not 'admin' or 'moderator'.
+        """
+        user = request.user
+
+        # Only check authenticated users
+        if user.is_authenticated:
+            # Example: assume user model has a "role" field
+            role = getattr(user, "role", None)
+
+            if role not in ["admin", "moderator"]:
+                return HttpResponseForbidden(
+                    "<h1>403 Forbidden</h1><p>You do not have permission to access this resource.</p>"
+                )
+
+        response = self.get_response(request)
+        return response
