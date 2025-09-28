@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from .models import Conversation, Message, User
 from .serializers import ConversationSerializer, MessageSerializer
+from .permissions import IsParticipantOfConversation, IsOwnerOrParticipant
 
 
 # ------------------------
@@ -12,10 +13,11 @@ from .serializers import ConversationSerializer, MessageSerializer
 class ConversationViewSet(viewsets.ModelViewSet):
     """
     API endpoint for listing, retrieving, and creating conversations.
+    Only participants can access conversations.
     """
     queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsParticipantOfConversation]
 
     # Enable filtering & searching
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
@@ -54,10 +56,11 @@ class ConversationViewSet(viewsets.ModelViewSet):
 class MessageViewSet(viewsets.ModelViewSet):
     """
     API endpoint for listing, retrieving, and creating messages.
+    Only participants in conversations can access messages.
     """
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwnerOrParticipant]
 
     # Enable filtering & searching
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]

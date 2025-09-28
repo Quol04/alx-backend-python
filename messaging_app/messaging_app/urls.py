@@ -17,6 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+    TokenVerifyView,
+)
+from chats import views
 from chats.views import ConversationViewSet, MessageViewSet
 
 router = DefaultRouter()
@@ -24,10 +30,18 @@ router.register(r'conversations', ConversationViewSet, basename="conversation")
 router.register(r'messages', MessageViewSet, basename="message")
 
 urlpatterns = [
+   
     path('admin/', admin.site.urls),
+    
+    # JWT Authentication endpoints
+    path('api/auth/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/auth/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    
+    # API endpoints
     path('api/', include(router.urls)),
-    path('api/', include('messaging_app.chats.urls')),  
     path('api/', include('chats.urls')),
-    # path('api/', include('chats.urls')),          # include chats routes
+    
+    # Browsable API authentication
     path('api-auth/', include('rest_framework.urls')), 
 ]
