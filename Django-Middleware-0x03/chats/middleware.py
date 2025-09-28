@@ -106,7 +106,7 @@ class OffensiveLanguageMiddleware:
 
 
 
-class RolePermissionMiddleware:
+class RolepermissionMiddleware:
     def __init__(self, get_response):
         """Called once at server startup"""
         self.get_response = get_response
